@@ -1,9 +1,9 @@
 - name: ensure printing service is configured
   notify: restart printer service
   loop:
-    "{{ printer_config_printers }}"
+    "{{ config_printer_printers }}"
   ansible.builtin.lineinfile:
     line: "ipp://{{ item['ipv4_address'] }}/printers/{{ item['printer_name'] }}"
-    path: "{{ printer_config_config_file_dest_path }}"
+    path: "{{ config_printer_config_file_dest_path }}"
     backup: true
     state: present

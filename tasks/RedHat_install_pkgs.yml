@@ -4,7 +4,7 @@
     or ansible_os_major_version == "8"
     or ansible_os_major_version == "7"
   loop:
-    "{{ printer_config_pkgs }}"
+    "{{ config_printer_pkgs }}"
   ansible.builtin.dnf:
     name: "{{ item['name'] }}"
     state: present
@@ -13,7 +13,7 @@
   when: >
     ansible_os_major_version == "6"
   loop:
-    "{{ printer_config_pkgs }}"
+    "{{ config_printer_pkgs }}"
   ansible.builtin.yum:
     name: "{{ item['name'] }}"
     state: present
