@@ -2,7 +2,7 @@
 
 # printer declaration variable
 # Currently I am only supporting ipv4
-printer_config_printers:
+config_printer_printers:
   - printer_name: 
     printer_ipv4:
     printer_ipv6:

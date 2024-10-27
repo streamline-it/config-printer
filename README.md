@@ -1,10 +1,10 @@
-# printer_config
+# config_printer
 Setup Printing for RHEL and FreeBSD hosts
 # contents of defaults/main
 
 # printer declaration variable
 # Currently I am only supporting ipv4
-printer_config_printers:
+config_printer_printers:
   - printer_name: 
     printer_ipv4:
     printer_ipv6:
@@ -13,13 +13,13 @@ printer_config_printers:
 # The values will be different based on OS specifics
 
 # path and name to the config file
-printer_config_config_file_path: 
+config_printer_config_file_path: 
 
 # contents of RedHat_variables.yml under vars
 
 # packages to install
-printer_config_pkgs:
+config_printer_pkgs:
   - name:
 
 # name of the printer service
-printer_config_printer_svc:
+config_printer_printer_svc:
