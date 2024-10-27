@@ -1,0 +1,4 @@
+---
+- name: ensure printer is added
+  ansible.builtin.debug:
+    msg: "tbd"

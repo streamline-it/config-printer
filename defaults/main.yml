@@ -1,0 +1,8 @@
+# defaults file for config-printer
+
+# printer declaration variable
+# Currently I am only supporting ipv4
+printer_config_printers:
+  - printer_name: 
+    printer_ipv4:
+    printer_ipv6:

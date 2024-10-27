@@ -1,0 +1,14 @@
+- name: ensure service(s) are restarted (systemd)
+  when: >
+    ansible_os_major_version == "9"
+    or ansible_os_major_version == "8"
+    or ansible_os_major_version == "7"
+  ansible.builtin.systemd:
+    name: "{{ config_printer_svc }}"
+    state: restart
+
+- name: ensure service(s) are restarted (service)
+  when: ansible_os_major_version == "6"
+  ansible.builtin.service:
+    name: "{{ printer_config_printer_svc }}"
+    state: restart

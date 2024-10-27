@@ -1,0 +1,10 @@
+# tassk file for config-printer
+
+- name: call task to install packages
+  ansible.builtin.include_tasks: "{{ ansible_os_family }}_install_pkgs.yml"
+
+- name: call tasks to start/enable service(s)
+  ansible.builtin.include_tasks: "{{ ansible_os_family }}_start_enable_svcs.yml"
+
+- name: call tasks to ensure printing service is configured
+  ansible.builtin.include_tasks: "{{ ansible_os_family }}_add_printer.yml"
