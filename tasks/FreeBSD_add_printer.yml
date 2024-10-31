@@ -1,4 +1,18 @@
 ---
-- name: ensure printer is added
-  ansible.builtin.debug:
-    msg: "tbd"
+- name: create directory for printing
+  ansible.builtin.file:
+    path: /var/spool/lpd/lp
+    owner: daemon
+    group: daemon
+    mode: 0770
+    state: directory
+
+- name: ensure printcap file is configured for the printer
+  notify: restart printer service
+  ansible.builtin.blockinfile:
+    path: /etc/printcap
+    block: |
+      "lp:lp=:rm={{ config_printer_printers[0]['ipv4_address'] }}:rp=raw:sh:mx#0:sd=/var/spool/lpd/lp:lf=/var/log/lpd-errs:"
+    marker_begin: "config-printer role opening block"
+    marker_end: "config-printer role closing block"
+    state: present

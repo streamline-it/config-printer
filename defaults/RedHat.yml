@@ -1,7 +1,7 @@
 ---
 config_printer_pkgs:
-  - name: cupsd
+  - name: cups
 
-config_printer_printer_svc: cupsd
+config_printer_printer_svc: cups
 
-config_printer_config_file_path: /etc/cups/printer.conf
+config_printer_config_file_path: /etc/cups/printers.conf

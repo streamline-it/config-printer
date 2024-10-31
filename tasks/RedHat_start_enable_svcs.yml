@@ -1,15 +1,19 @@
+- name: ensure variables are present
+  ansible.builtin.include_vars:
+    "./defaults/{{ ansible_os_family }}.yml"
+
 - name: enable start service (systemd)
   when: >
-    ansible_os_major_version == "9"
-    or ansible_os_major_version == "8"
-    or ansible_os_major_version == "7"
+    ansible_distribution_major_version == "9"
+    or ansible_distribution_major_version == "8"
+    or ansible_distribution_major_version == "7"
   ansible.builtin.systemd:
     name: "{{ config_printer_printer_svc }}"
     enabled: true
-    start: started
+    state: started
 
 - name: enable start service (service)
-  when: ansible_os_major_version == "6"
+  when: ansible_distribution_major_version == "6"
   ansible.builtin.service:
     name: "{{ config_printer_printer_svc }}"
     enabled: true

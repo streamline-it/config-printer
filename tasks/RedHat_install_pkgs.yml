@@ -1,8 +1,12 @@
+- name: ensure variables are present
+  ansible.builtin.include_vars:
+    "./defaults/{{ ansible_os_family }}.yml"
+
 - name: ensure needed pkg(s) are installed (dnf)
   when: >
-    ansible_os_major_version == "9"
-    or ansible_os_major_version == "8"
-    or ansible_os_major_version == "7"
+    ansible_distribution_major_version == "9"
+    or ansible_distribution_major_version == "8"
+    or ansible_distribution_major_version == "7"
   loop:
     "{{ config_printer_pkgs }}"
   ansible.builtin.dnf:
@@ -11,7 +15,7 @@
 
 - name: ensure needed pkg(s) are installed (yum)
   when: >
-    ansible_os_major_version == "6"
+    ansible_distribution_major_version == "6"
   loop:
     "{{ config_printer_pkgs }}"
   ansible.builtin.yum:

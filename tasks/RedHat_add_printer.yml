@@ -1,9 +1,13 @@
+- name: ensure variables are available
+  ansible.builtin.include_vars:
+    "./defaults/{{ ansible_os_family }}.yml"
+
 - name: ensure printing service is configured
   notify: restart printer service
   loop:
     "{{ config_printer_printers }}"
   ansible.builtin.lineinfile:
     line: "ipp://{{ item['ipv4_address'] }}/printers/{{ item['printer_name'] }}"
-    path: "{{ config_printer_config_file_dest_path }}"
+    path: "{{ config_printer_config_file_path }}"
     backup: true
     state: present

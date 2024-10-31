@@ -1,4 +1,8 @@
 ---
+- name: ensure variables are pulled in
+  ansible.builtin.include_vars:
+    "./defaults/{{ ansible_os_family }}.yml"
+
 - name: ensure packages are installed
   ansible.builtin.debug:
-    msg: "tbd"
+    msg: "No packages needed to be installed"

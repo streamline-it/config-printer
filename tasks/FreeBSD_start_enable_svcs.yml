@@ -1,4 +1,11 @@
 ---
-- name: ensure needed services are started enabled
-  ansible.builtin.debug:
-    msg: "tbd"
+- name: ensure needed services are enabled
+  community.general.sysrc:
+    name: "{{ config_printer_printer_svc }}_enable"
+    value: YES
+    state: present
+
+- name: ensure needed services are started
+  ansible.builtin.service:
+    name: "{{ config_printer_printer_svc }}"
+    state: started
