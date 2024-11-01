@@ -1,4 +1,7 @@
-- name: restart printer service
+- name: ensure OS variables are imported
+  ansible.builtin.include_vars: "./defaults/{{ ansible_os_family }}.yml"
+
+- name: restart printer service RedHat
   when: >
     ansible_os_family == "RedHat"
     and ansible_distribution_major_version == "9"
@@ -8,7 +11,7 @@
     name: "{{ config_printer_printer_svc }}"
     state: restarted
 
-- name: restart printer service
+- name: restart printer service RedHat
   when: >
     ansible_os_family == "RedHat"
     and ansible_distribution_major_version == "6"
@@ -16,12 +19,8 @@
     name: "{{ printer_config_printer_printer_svc }}"
     state: restarted
 
-- name: restart printer service
-  when: >
-    false
-    ansible_os_family == "FreeBSD"
+- name: restart printer service FreeBSD
+  when: ansible_os_family == "FreeBSD"
   ansible.builtin.service:
-    name: "{{ printer_config_printer_printer_svc }}"
+    name: "{{ config_printer_printer_svc }}"
     state: restarted
-
-

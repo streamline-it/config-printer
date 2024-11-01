@@ -8,11 +8,10 @@
     state: directory
 
 - name: ensure printcap file is configured for the printer
-  notify: restart printer service
-  ansible.builtin.blockinfile:
+  loop:
+    "{{ config_printer_printers }}"
+  notify: restart printer service FreeBSD
+  ansible.builtin.lineinfile:
     path: /etc/printcap
-    block: |
-      "lp:lp=:rm={{ config_printer_printers[0]['ipv4_address'] }}:rp=raw:sh:mx#0:sd=/var/spool/lpd/lp:lf=/var/log/lpd-errs:"
-    marker_begin: "config-printer role opening block"
-    marker_end: "config-printer role closing block"
+    line: "lp:lp=:rm={{ item['ipv4_address'] }}:rp=raw:sh:mx#0:sd=/var/spool/lpd/lp:lf=/var/log/lpd-errs:"
     state: present
