@@ -5,6 +5,36 @@
     value: YES
     state: present
 
+- name: check to see if ruleset exists
+  register: printer_config_ruleset_check
+  ansible.builtin.stat:
+    path: "{{ printer_config_ruleset_filepath }}"
+
+- name: ensure file for devfs ruleset file exists
+  when: printer_config_ruleset_check['stat']['exists'] == false
+  ansible.builtin.copy:
+    content: ""
+    dest: "{{ printer_config_ruleset_filepath }}"
+    owner: root
+    group: wheel
+    mode: "0644"
+
+- name: ensure devfs ruleset content is setup
+  ansible.builtin.blockinfile:
+    path: "{{ printer_config_ruleset_filepath }}"
+    marker: printer_config
+    block: <
+      # needed for cupsd
+      [system=10]
+      add path 'unlpt*' mode 0660 group cups
+      add path 'ulpt*' mode 0660 group cups
+      add path 'lpt' mode 0660 group cups
+- name: ensure devfs ruleset is enabled
+  community.general.sysrc:
+    name: "devfs_system_ruleset"
+    value: system
+    state: present
+
 - name: ensure needed services are started
   ansible.builtin.service:
     name: "{{ config_printer_printer_svc }}"

@@ -4,5 +4,7 @@
     "./defaults/{{ ansible_os_family }}.yml"
 
 - name: ensure packages are installed
-  ansible.builtin.debug:
-    msg: "No packages needed to be installed"
+  loop:
+    "{{ printer_config_pkgs }}"
+  community.general.pkgng:
+    name: "{{ item['name'] }}"

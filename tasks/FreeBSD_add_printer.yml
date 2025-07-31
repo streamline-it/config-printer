@@ -1,17 +1,16 @@
 ---
-- name: create directory for printing
-  ansible.builtin.file:
-    path: /var/spool/lpd/lp
-    owner: daemon
-    group: daemon
-    mode: 0770
-    state: directory
 
-- name: ensure printcap file is configured for the printer
-  loop:
-    "{{ config_printer_printers }}"
-  notify: restart printer service FreeBSD
-  ansible.builtin.lineinfile:
-    path: /etc/printcap
-    line: "lp:lp=:rm={{ item['ipv4_address'] }}:rp=raw:sh:mx#0:sd=/var/spool/lpd/lp:lf=/var/log/lpd-errs:"
-    state: present
+- name: check to see if the printer exists under cups
+  register: config_printer_printer_check
+  ansible.builtin.command:
+    cmd: grep "{{ config_printer_printers['printer_name'] }}" /usr/local/etc/cups/printers.conf
+    
+- name: dump variable
+  ansible.builtin.debug:
+    var: config_printer_printer_check
+
+- name: ensure the printer is added
+  when: false
+  ansible.builtin.command:
+    cmd: "lpadmin -p {{ config_printer_printers['printer_name'] }} -E -v {{ config_printer_printers['printer_path'] }} -m drv:{{ config_printer_printers['driver_filepath'] }}"
+

@@ -3,7 +3,8 @@ printer_config_config_file_path: /etc/cups/printer.conf
 
 # packages to install
 printer_config_pkgs:
-  - name: cupsd:
+  - name: cupsd
 
 # name of the printer service
-printer_config_printer_svc: cupsd
+printer_config_printer_svcs: 
+  - cupsd

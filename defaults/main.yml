@@ -1,8 +1,15 @@
 # defaults file for config-printer
 
 # printer declaration variable
-# Currently I am only supporting ipv4
+
+# This is an example of a laserjet compatible network printer
+# using jetdirect mothod of socket
+# config_printer_printers:
+#  - printer_name: office_printer
+#    printer_filepath: "///sample.drv/laserjet.ppd"
+#    printer_path: "socket://10.0.0.100:9100"
+
 config_printer_printers:
   - printer_name: 
-    ipv4_address:
-    ipv6_address:
+    driver_filepath:
+    printer_path:
