@@ -1,34 +1,37 @@
 ---
 - name: ensure needed services are enabled
+  loop:
+    "{{ config_printer_svc }}"
   community.general.sysrc:
-    name: "{{ config_printer_printer_svc }}_enable"
+    name: "{{ item }}_enable"
     value: YES
     state: present
 
 - name: check to see if ruleset exists
-  register: printer_config_ruleset_check
+  register: config_printer_ruleset_check
   ansible.builtin.stat:
-    path: "{{ printer_config_ruleset_filepath }}"
+    path: "{{ config_printer_ruleset_filepath }}"
 
 - name: ensure file for devfs ruleset file exists
-  when: printer_config_ruleset_check['stat']['exists'] == false
+  when: config_printer_ruleset_check['stat']['exists'] == false
   ansible.builtin.copy:
     content: ""
-    dest: "{{ printer_config_ruleset_filepath }}"
+    dest: "{{ config_printer_ruleset_filepath }}"
     owner: root
     group: wheel
     mode: "0644"
 
 - name: ensure devfs ruleset content is setup
   ansible.builtin.blockinfile:
-    path: "{{ printer_config_ruleset_filepath }}"
-    marker: printer_config
-    block: <
+    path: "{{ config_printer_ruleset_filepath }}"
+    marker: "{mark} config_printer"
+    block: | 
       # needed for cupsd
       [system=10]
       add path 'unlpt*' mode 0660 group cups
       add path 'ulpt*' mode 0660 group cups
       add path 'lpt' mode 0660 group cups
+
 - name: ensure devfs ruleset is enabled
   community.general.sysrc:
     name: "devfs_system_ruleset"
@@ -36,6 +39,8 @@
     state: present
 
 - name: ensure needed services are started
+  loop:
+    "{{ config_printer_svc }}"
   ansible.builtin.service:
-    name: "{{ config_printer_printer_svc }}"
+    name: "{{ item }}"
     state: started

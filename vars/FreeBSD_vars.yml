@@ -1,13 +1,13 @@
 # path and name to the config file
-printer_config_config_file_path: /etc/cups/printer.conf
+config_printer_config_file_path: /usr/local/etc/cups/printers.conf
 
 # packages to install
-printer_config_pkgs:
+config_printer_pkgs:
   - name: cups
 
 # name of the printer service
-printer_config_printer_svc: 
+config_printer_svc: 
   - cupsd
   - devfs
 
-printer_config_ruleset_filepath: /etc/devfs.rules
+config_printer_ruleset_filepath: /etc/devfs.rules
