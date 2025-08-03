@@ -24,6 +24,8 @@
 - name: ensure devfs ruleset content is setup
   ansible.builtin.blockinfile:
     path: "{{ config_printer_ruleset_filepath }}"
+    marker_begin: "#BEGIN"
+    marker_end: "#END"
     marker: "{mark} config_printer"
     block: | 
       # needed for cupsd

@@ -1,6 +1,7 @@
 ---
 
 - name: check to see if the printers.conf file exists
+  changed_when: false
   register: config_printer_printerconf_check
   ansible.builtin.stat:
     path: "{{ config_printer_config_file_path }}"
@@ -13,20 +14,21 @@
 
 - name: check to see if the printer exists under cups
   register: config_printer_printer_check
+  changed_when: false
   loop:
     "{{ config_printer_printers }}"
+  loop_control:
+    index_var: config_printer_index_var
   when: item['printer_name'] != ""
+  failed_when: config_printer_printer_check.rc > 1
   ansible.builtin.shell:
     cmd: "/usr/bin/grep {{ item['printer_name'] }} {{ config_printer_config_file_path }}"
     
-- name: dump variable
-  ansible.builtin.debug:
-    var: config_printer_printer_check
-
 - name: ensure the printer is added
-  when: false
   loop:
     "{{ config_printer_printers }}"
+  loop_control:
+    index_var: config_printer_loop_index
+  when: config_printer_printer_check['results'][config_printer_loop_index]['rc'] == 1
   ansible.builtin.command:
     cmd: "lpadmin -p {{ item['printer_name'] }} -E -v {{ item['printer_path'] }} -m drv:{{ item['driver_filepath'] }}"
-
