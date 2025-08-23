@@ -9,6 +9,10 @@ config_printer_printers:
     driver_filepath:
     printer_path:
 
+# user list to be used to check and if necessary add user to cups group
+config_printer_users:
+  -
+
 # The following variables are used for the defaults/RedHat and defaults/FreeBSD files
 # The values will be different based on OS specifics
 

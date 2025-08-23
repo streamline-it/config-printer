@@ -13,3 +13,7 @@ config_printer_printers:
   - printer_name: 
     driver_filepath:
     printer_path:
+
+config_printer_users:
+  -
+

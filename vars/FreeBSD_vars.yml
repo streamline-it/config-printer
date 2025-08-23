@@ -4,6 +4,7 @@ config_printer_config_file_path: /usr/local/etc/cups/printers.conf
 # packages to install
 config_printer_pkgs:
   - name: cups
+  - name: cups-filters
 
 # name of the printer service
 config_printer_svc: 

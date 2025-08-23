@@ -1,0 +1,19 @@
+---
+
+- name: check to see if the user is a member of the cups group
+  register: config_printer_usergroup_check
+  loop:
+    "{{ config_printer_users }}"
+  ansible.builtin.shell:
+    executable: /bin/sh
+    cmd: "$(which id) {{ item }} | $(which grep) cups"
+
+- name: ensure the user belongs to the cups group
+  loop:
+    "{{ config_printer_users }}"
+  loop_control:
+    index_var: config_printer_user_index
+  when: config_printer_usergroup_check[config_printer_user_index]['results']['rc'] == 1
+  ansible.builtin.shell:
+    executable: /bin/sh
+    cmd: "$(which pw groupmod) -m {{ item }}"
