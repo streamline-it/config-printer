@@ -33,16 +33,39 @@
       add path 'unlpt*' mode 0660 group cups
       add path 'ulpt*' mode 0660 group cups
       add path 'lpt' mode 0660 group cups
+      add path 'usb/X.Y.Z' mode 0660 group cups
 
-- name: ensure devfs ruleset is enabled
+- name: ensure the the devfs service is enabled
   community.general.sysrc:
-    name: "devfs_system_ruleset"
-    value: system
+    name: 'dev_system_ruleset'
+    value: YES
     state: present
 
-- name: ensure needed services are started
+# The OS can't seem to determine the status of the devfs service so 
+# I need to only use service for cupsd.
+- name: ensure cups service is started
   loop:
     "{{ config_printer_svc }}"
+  when: "item == 'cupsd'"
   ansible.builtin.service:
     name: "{{ item }}"
+    state: started
+
+# Now I need to check to see if the devfs filesystem exists to determine
+# if I need to start the devfs service
+- name: check to see if the devfs filesystem exists
+  changed_when: false
+  failed_when: false
+  register: config_printer_devfscheck
+  ansible.builtin.shell:
+    executable: /bin/sh
+    cmd: $(which df) | grep 'devfs'
+
+- name: ensure the devfs service is running
+  loop:
+    "{{ config_printer_svc }}"
+  when: "config_printer_devfscheck['rc'] == 1 and
+     item == 'devfs'"
+  ansible.builtin.service:
+    name: "{{ item ]}"
     state: started

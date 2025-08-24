@@ -21,6 +21,8 @@
 
 - name: restart printer service FreeBSD
   when: ansible_os_family == "FreeBSD"
+  loop:
+    "{{ config_printer_svc }}"
   ansible.builtin.service:
-    name: "{{ config_printer_printer_svc }}"
+    name: "{{ item }}"
     state: restarted
