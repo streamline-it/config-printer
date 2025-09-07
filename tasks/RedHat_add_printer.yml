@@ -1,14 +1,37 @@
-- name: ensure variables are available
-  ansible.builtin.include_vars:
-    "./defaults/{{ ansible_os_family }}.yml"
+---
 
-- name: ensure printing service is configured
-  when: false
+- name: check to see if the printers.conf file exists
+  changed_when: false
+  register: config_printer_printerconf_check
+  ansible.builtin.stat:
+    path: "{{ config_printer_config_file_path }}"
+
+- name: ensure the printers.conf file exists
+  when: config_printer_printerconf_check['stat']['exists'] == false
+  notify: restart printer service RedHat
+  ansible.builtin.copy:
+    content: ""
+    dest: "{{ config_printer_config_file_path }}" 
+
+- name: check to see if the printer exists under cups
+  register: config_printer_printer_check
+  notify: restart printer service RedHat
+  changed_when: false
+  loop:
+    "{{ config_printer_printers }}"
+  loop_control:
+    index_var: config_printer_index_var
+  when: item['printer_name'] != ""
+  failed_when: config_printer_printer_check.rc > 1
+  ansible.builtin.shell:
+    cmd: "/usr/bin/grep {{ item['printer_name'] }} {{ config_printer_config_file_path }}"
+    
+- name: ensure the printer is added
   notify: restart printer service RedHat
   loop:
     "{{ config_printer_printers }}"
-  ansible.builtin.lineinfile:
-    line: "ipp://{{ item['ipv4_address'] }}/printers/{{ item['printer_name'] }}"
-    path: "{{ config_printer_config_file_path }}"
-    backup: true
-    state: present
+  loop_control:
+    index_var: config_printer_loop_index
+  when: config_printer_printer_check['results'][config_printer_loop_index]['rc'] == 1
+  ansible.builtin.command:
+    cmd: "lpadmin -p {{ item['printer_name'] }} -E -v {{ item['printer_path'] }} -m drv:{{ item['driver_filepath'] }}"
