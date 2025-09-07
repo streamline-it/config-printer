@@ -1,10 +1,10 @@
-- name: ensure variables are present
+---
+- name: ensure variables are pulled in
   ansible.builtin.include_vars:
-    "./defaults/{{ ansible_os_family }}.yml"
+    "./vars/{{ ansible_os_family }}_vars.yml"
 
-- name: ensure needed pkg(s) are installed (dnf)
-  when: >
-    ansible_distribution_major_version == "9"
+- name: ensure packages are installed (dnf)
+  when: ansible_distribution_major_version == "9"
     or ansible_distribution_major_version == "8"
     or ansible_distribution_major_version == "7"
   loop:
@@ -13,9 +13,8 @@
     name: "{{ item['name'] }}"
     state: present
 
-- name: ensure needed pkg(s) are installed (yum)
-  when: >
-    ansible_distribution_major_version == "6"
+- name: ensure packages are installed (yum)
+  when: ansible_distribution_major_version == "6"
   loop:
     "{{ config_printer_pkgs }}"
   ansible.builtin.yum:

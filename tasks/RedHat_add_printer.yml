@@ -3,6 +3,7 @@
     "./defaults/{{ ansible_os_family }}.yml"
 
 - name: ensure printing service is configured
+  when: false
   notify: restart printer service RedHat
   loop:
     "{{ config_printer_printers }}"
