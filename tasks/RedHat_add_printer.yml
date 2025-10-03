@@ -24,7 +24,7 @@
   when: item['printer_name'] != ""
   failed_when: config_printer_printer_check.rc > 1
   ansible.builtin.shell:
-    cmd: "/usr/bin/grep {{ item['printer_name'] }} {{ config_printer_config_file_path }}"
+    cmd: "/usr/bin/lpstat -p | grep {{ item['printer_name'] }}"
     
 - name: ensure the printer is added
   notify: restart printer service RedHat
