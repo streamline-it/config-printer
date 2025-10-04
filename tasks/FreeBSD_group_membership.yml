@@ -13,13 +13,25 @@
     cmd: "$(which id) {{ item }} | $(which grep) cups"
 
 # multiple users
-- name: ensure the user belongs to the cups group 
+- name: ensure the user belongs to the cups group (multiple users)
   loop:
     "{{ config_printer_users }}"
   loop_control:
     index_var: config_printer_user_index
   when: config_printer_users | length > 1 and
     config_printer_usergroup_check['results'][config_printer_user_index]['rc'] == 1
+  ansible.builtin.shell:
+    executable: /bin/sh
+    cmd: "$(which pw) groupmod cups -m {{ item }}"
+
+
+# single user
+- name: ensure the user belongs to the cups group (single user)
+  loop:
+    "{{ config_printer_users }}"
+  when: config_printer_users | length == 1 and
+    config_printer_usergroup_check['results'][0]['rc'] == 1
+  debugger: on_failed
   ansible.builtin.shell:
     executable: /bin/sh
     cmd: "$(which pw) groupmod cups -m {{ item }}"
