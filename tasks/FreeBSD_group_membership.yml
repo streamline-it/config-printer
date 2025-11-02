@@ -22,7 +22,7 @@
     config_printer_usergroup_check['results'][config_printer_user_index]['rc'] == 1
   ansible.builtin.shell:
     executable: /bin/sh
-    cmd: "$(which pw) groupmod cups -m {{ item }}"
+    cmd: "$(which pw) groupmod -n cups -m {{ item }}"
 
 
 # single user
@@ -34,4 +34,4 @@
   debugger: on_failed
   ansible.builtin.shell:
     executable: /bin/sh
-    cmd: "$(which pw) groupmod cups -m {{ item }}"
+    cmd: "$(which pw) groupmod -n cups -m {{ item }}"
