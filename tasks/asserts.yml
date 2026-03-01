@@ -1,0 +1,10 @@
+---
+- name: ensure key variables are defined
+  ansible.builtin.assert:
+    that:
+      - config_printer_printers is defined
+      - config_printer_printers is truthy
+      - config_printer_users is defined
+      - config_printer_users is truthy
+    fail_msg:
+      - "Ensure variables are defined/setup with values"
